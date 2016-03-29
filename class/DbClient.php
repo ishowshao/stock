@@ -81,8 +81,8 @@ class DbClient
     }
 }
 
-$collection = DbClient::getInstance('test')->getCollection('testData');
-$cursor = $collection->find();
-foreach ($cursor as $data) {
-    var_dump($data);
-}
+//$collection = DbClient::getInstance('test')->getCollection('testData');
+//$cursor = $collection->find();
+//foreach ($cursor as $data) {
+//    var_dump($data);
+//}
