@@ -31,16 +31,17 @@ class DbClient
     }
 
     /**
-     * 获取实例之后要先 selectDb
+     * 直接连接到db
      *
+     * @param string $name
      * @return DbClient
      */
-    public static function getInstance()
+    public static function getInstance($name)
     {
         if (!isset(self::$instance)) {
             self::$instance = new DbClient();
         }
-        return self::$instance;
+        return self::$instance->selectDb($name);
     }
 
     public function getDb()
@@ -80,7 +81,7 @@ class DbClient
     }
 }
 
-$collection = DbClient::getInstance()->getCollection('testData');
+$collection = DbClient::getInstance('test')->getCollection('testData');
 $cursor = $collection->find();
 foreach ($cursor as $data) {
     var_dump($data);
