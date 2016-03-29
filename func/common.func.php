@@ -16,14 +16,23 @@ function fetch($url) {
 }
 
 /**
- * 解析新浪股票获取过来的原始股票价格字符串
+ * 解析新浪股票获取过来的原始股票价格字符串，只适用以下格式
+ * http://hq.sinajs.cn/list=s_sz300212
+ * var hq_str_s_sz300212="易华录,32.760,0.730,2.28,62617,20692";
  *
- * @param string $priceData
+ * @param string $stockIds 逗号分隔的stock id sz300212,sz300059
  * @return array
  */
-function parseSinaPrice($priceData) {
+function getSinaSimpleData($stockIds) {
+    // 格式转换 sz300212,sz300059  --> s_sz300212,s_sz300059
+    $sArray = explode(',', $stockIds);
+    $list = '';
+    foreach ($sArray as $stockId) {
+        $list .= 's_' . $stockId . ',';
+    }
+
     $parsed = array();
-    $array = explode("\n", mb_convert_encoding($priceData, 'utf8', 'gbk'));
+    $array = explode("\n", mb_convert_encoding(fetch('http://hq.sinajs.cn/list=' . $list), 'utf8', 'gbk'));
     foreach ($array as $stockString) {
         if ($stockString) {
             $stock = array();

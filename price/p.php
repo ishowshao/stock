@@ -11,18 +11,10 @@ $response = array();
 if (isset($_GET['s'])) {
     $s = trim($_GET['s']);
     if (strlen($s) > 0) {
-        $sArray = explode(',', $s);
-        $s = '';
-        foreach ($sArray as $stockId) {
-            $s .= 's_' . $stockId . ',';
-        }
-
-        // curl
-        $return = fetch('http://hq.sinajs.cn/list=' . $s);
-
-        $response = parseSinaPrice($return);
+        $response = getSinaSimpleData($s);
     }
 }
+
 if (isset($_GET['jsonp']) && preg_match('/^[_a-zA-Z][A-Za-z0-9_]*/', $_GET['jsonp'])) {
     header('Content-Type: application/javascript');
     echo $_GET['jsonp'], '(', json_encode($response), ');';
