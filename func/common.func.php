@@ -51,3 +51,30 @@ function getSinaSimpleData($stockIds) {
     }
     return $parsed;
 }
+
+function getSinaData($stockIds) {
+    $parsed = array();
+    $array = explode("\n", mb_convert_encoding(fetch('http://hq.sinajs.cn/list=' . $stockIds), 'utf8', 'gbk'));
+    foreach ($array as $stockString) {
+        if ($stockString) {
+            $stockString = substr($stockString, strpos($stockString, '"') + 1);
+            $stockString = substr($stockString, 0, strpos($stockString, '"'));
+            if ($stockString !== '') {
+                $stockData = explode(',', $stockString);
+                $stock = array();
+                $stock['name'] = $stockData[0];
+                $stock['open'] = floatval($stockData[1]);
+                $stock['yesterday_close'] = floatval($stockData[2]);
+                $stock['current'] = floatval($stockData[3]);
+                $stock['high'] = floatval($stockData[4]);
+                $stock['low'] = floatval($stockData[5]);
+                $stock['date'] = $stockData[30];
+                $stock['time'] = $stockData[31];
+                $parsed[] = $stock;
+            } else {
+                $parsed[] = null;
+            }
+        }
+    }
+    return $parsed;
+}
