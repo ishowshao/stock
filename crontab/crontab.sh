@@ -1,2 +1,2 @@
 #! /bin/sh
-/usr/bin/php ./update.php
+/usr/bin/php `dirname $0`/update.php
