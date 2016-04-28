@@ -22,7 +22,14 @@ foreach ($stocks as $i => $stock) {
     echo 'find ', $priceData[$i]['date'], "\n";
     $found = $cursor->count();
     if (!$found) {
-        $collection->insert($priceData[$i]);
+        $object = $priceData[$i];
+        unset($object['name']);
+        unset($object['yesterday_close']);
+        unset($object['time']);
+        $object['close'] = $object['current'];
+        unset($object['current']);
+
+        $collection->insert($object);
     }
     var_dump($found);
 }
