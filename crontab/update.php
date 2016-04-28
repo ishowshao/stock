@@ -8,13 +8,37 @@ require PATH . '/../class/DbClient.php';
 
 $listenStocks = DbClient::getInstance('stock')->getCollection('listen')->find();
 $stocks = array();
+$count = 0;
 foreach ($listenStocks as $object) {
     $stocks[] = $object['id'];
+    $count++;
+    if ($count == 10) {
+        $count = 0;
+        $stocks = array();
+
+        $priceData = getSinaData(implode(',', $stocks));
+
+        foreach ($stocks as $i => $stock) {
+            $collection = DbClient::getInstance('stock_history')->getCollection($stock);
+            $cursor = $collection->find(array('date' => $priceData[$i]['date']));
+            echo 'find ', $priceData[$i]['date'], "\n";
+            $found = $cursor->count();
+            if (!$found) {
+                $object = $priceData[$i];
+                unset($object['name']);
+                unset($object['yesterday_close']);
+                unset($object['time']);
+                $object['close'] = $object['current'];
+                unset($object['current']);
+
+                $collection->insert($object);
+            }
+        }
+    }
 }
 
+// 剩余的
 $priceData = getSinaData(implode(',', $stocks));
-
-var_dump($priceData);
 
 foreach ($stocks as $i => $stock) {
     $collection = DbClient::getInstance('stock_history')->getCollection($stock);
@@ -31,7 +55,6 @@ foreach ($stocks as $i => $stock) {
 
         $collection->insert($object);
     }
-    var_dump($found);
 }
 //foreach ($cursor as $data) {
 //    var_dump($data);
