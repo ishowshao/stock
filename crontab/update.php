@@ -13,9 +13,7 @@ foreach ($listenStocks as $object) {
     $stocks[] = $object['id'];
     $count++;
     if ($count == 10) {
-        $count = 0;
-        $stocks = array();
-
+        // 批处理10份数据
         $priceData = getSinaData(implode(',', $stocks));
 
         foreach ($stocks as $i => $stock) {
@@ -34,10 +32,14 @@ foreach ($listenStocks as $object) {
                 $collection->insert($object);
             }
         }
+
+        // reset
+        $count = 0;
+        $stocks = array();
     }
 }
 
-// 剩余的
+// 处理剩余的数据
 $priceData = getSinaData(implode(',', $stocks));
 
 foreach ($stocks as $i => $stock) {
