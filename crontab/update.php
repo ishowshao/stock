@@ -19,7 +19,6 @@ foreach ($listenStocks as $object) {
         foreach ($stocks as $i => $stock) {
             $collection = DbClient::getInstance('stock_history')->getCollection($stock);
             $cursor = $collection->find(array('date' => $priceData[$i]['date']));
-            echo 'find ', $priceData[$i]['date'], "\n";
             $found = $cursor->count();
             if (!$found) {
                 $object = $priceData[$i];
@@ -45,7 +44,6 @@ $priceData = getSinaData(implode(',', $stocks));
 foreach ($stocks as $i => $stock) {
     $collection = DbClient::getInstance('stock_history')->getCollection($stock);
     $cursor = $collection->find(array('date' => $priceData[$i]['date']));
-    echo 'find ', $priceData[$i]['date'], "\n";
     $found = $cursor->count();
     if (!$found) {
         $object = $priceData[$i];
