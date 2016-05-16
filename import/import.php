@@ -1,4 +1,12 @@
 <?php
+/**
+ * 从通达信导出的文件，导入数据库
+ */
+
+/**
+ * @param $content
+ * @return array
+ */
 function parse($content) {
     $content = mb_convert_encoding(trim($content), 'utf8', 'gbk');
     $contentArray = explode("\n", $content);
